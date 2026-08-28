@@ -2,8 +2,7 @@
 //
 // Font installation (fonts.ts), font embedding into SVG (embed.ts), canvas
 // rasterizing with the same interface as @gum-jsx/node (raster.ts), and file
-// helpers (files.ts). The GIF encoder is a separate entry point
-// (@gum-jsx/web/gif) so its dependency is only pulled in when used.
+// helpers (files.ts).
 
 export * from './fonts'
 export * from './embed'

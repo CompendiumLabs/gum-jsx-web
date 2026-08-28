@@ -1,6 +1,6 @@
 # @gum-jsx/web
 
-The browser runtime for [gum.jsx](https://github.com/CompendiumLabs/gum-jsx): installs the fonts gum measured with so the page draws its SVG in the same faces, embeds those fonts into an SVG so it stands alone, rasterizes SVG to PNG on a `<canvas>` with the same interface as [`@gum-jsx/node`](https://github.com/CompendiumLabs/gum-jsx-node), and handles downloads and blob/data-url conversions. Framework-free; `@gum-jsx/core` is a peer dependency.
+The browser runtime for [gum.jsx](https://github.com/CompendiumLabs/gum-jsx): installs the fonts gum measured with so the page draws its SVG in the same faces, embeds those fonts into an SVG so it stands alone, rasterizes SVG to PNG on a `<canvas>` with the same interface as [`@gum-jsx/node`](https://github.com/CompendiumLabs/gum-jsx-node), and handles downloads and blob/data-url conversions. Framework-free with no dependencies of its own; `@gum-jsx/core` is a peer dependency.
 
 ## Installation
 
@@ -38,4 +38,4 @@ downloadFile('figure.png', png)
 const pixels = await rasterizePixels(elem, { dpr: 2 })                      // ImageData
 ```
 
-`rasterizeSvg(svg, { size?, background?, fonts?, dpr? })` takes an `Svg` element or markup, fits its own size into `size` (a number or `[width, height]`), embeds the fonts unless `fonts: false`, and draws it on a canvas; `rasterizePixels` returns the `ImageData` instead. Animated GIFs from a list of frames are the separate entry point `@gum-jsx/web/gif` (`rasterizeGif(frames, { delay })`), so the encoder is only bundled when used.
+`rasterizeSvg(svg, { size?, background?, fonts?, dpr? })` takes an `Svg` element or markup, fits its own size into `size` (a number or `[width, height]`), embeds the fonts unless `fonts: false`, and draws it on a canvas; `rasterizePixels` returns the `ImageData` instead, for encoders and further processing (an animated GIF, a PDF page).

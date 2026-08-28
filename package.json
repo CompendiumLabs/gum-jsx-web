@@ -22,7 +22,6 @@
     "./embed": "./src/embed.ts",
     "./raster": "./src/raster.ts",
     "./files": "./src/files.ts",
-    "./gif": "./src/gif.ts",
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -31,9 +30,6 @@
   },
   "peerDependencies": {
     "@gum-jsx/core": "^1.7.0"
-  },
-  "dependencies": {
-    "gifenc": "^1.0.3"
   },
   "devDependencies": {
     "@gum-jsx/core": "^1.7.0",

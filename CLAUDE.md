@@ -11,16 +11,16 @@ checkouts.
 
 It replaces what the studio (`~/mlai/gum`), the blog and `gum.tex` each carried by hand: the
 `@font-face` CSS files (which had drifted from each other), a fonts-ready gate, and the studio's
-`libs/render.ts`, `libs/utils.ts` and `gifenc` wiring.
+`libs/render.ts` and `libs/utils.ts`. Encoders built on the pixels (the studio's GIF via
+`gifenc`, its raster PDF) stay with the apps: they are not general enough to ship here.
 
 ## Layout
 
 - `src/fonts.ts` - `loadedFaces()` enumerates the loaded registry as CSS faces (one per file; a light/regular/bold set becomes three, a `FONT_FACES` mapping carries its family/weight/style); `installFontFaces()` adds them to `document.fonts` once each (a no-op outside a browser); `loadWebFonts(names?)` is `loadFonts` + `installFontFaces`
 - `src/embed.ts` - `fontCss(names?)` builds cached data-url `@font-face` rules from the loaded faces; `embedFonts(svg, names?)` puts them in an `Svg` element's `<style>` (via `clone`) or after the opening tag of markup
-- `src/raster.ts` - `rasterizeSvg` (PNG `Blob`) and `rasterizePixels` (`ImageData`), the `@gum-jsx/node` interface plus `fonts` and `dpr`: the markup (fonts embedded, since an `<img>` renders in isolation) goes through a blob url into an `Image` and onto a canvas sized by `fitSize`. `drawSvgCanvas` returns the canvas for callers that want to keep drawing
+- `src/raster.ts` - `rasterizeSvg` (PNG `Blob`) and `rasterizePixels` (`ImageData`, what a GIF or PDF encoder consumes), the `@gum-jsx/node` interface plus `fonts` and `dpr`: the markup (fonts embedded, since an `<img>` renders in isolation) goes through a blob url into an `Image` and onto a canvas sized by `fitSize`. `drawSvgCanvas` returns the canvas for callers that want to keep drawing
 - `src/files.ts` - `downloadFile`/`downloadSvg`, base64 and blob ↔ data-url conversions
-- `src/gif.ts` - `rasterizeGif(frames, { delay, ... })` with `gifenc`, exported as `@gum-jsx/web/gif` only so the encoder is opt-in; `src/types/gifenc.d.ts` types the parts used
-- `src/index.ts` - `export *` of everything but gif
+- `src/index.ts` - `export *` of the four modules
 - `scripts/test.ts` - The DOM-free parts under bun: face enumeration, embedding, base64 round trips
 
 ## Commands
