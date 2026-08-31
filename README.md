@@ -14,14 +14,15 @@ gum lays text out with real font metrics, so a browser host has to load the font
 
 ```javascript
 import { loadWebFonts } from '@gum-jsx/web'
-import { evaluateGum } from '@gum-jsx/core/eval'
-import '@gum-jsx/math'            // registers <Latex> and the KaTeX faces before loading
+import { gum } from '@gum-jsx/core'
+import { math } from '@gum-jsx/math'
 
-await loadWebFonts()              // everything registered; or a list of family names
-container.innerHTML = evaluateGum('<Text>hello</Text>').svg()
+gum.use(math)                     // <Latex> and the KaTeX faces in the default Env, before loading
+await loadWebFonts()              // everything the Env knows; or a list of family names
+container.innerHTML = gum.evaluate('<Text>hello</Text>').svg()
 ```
 
-To keep the initial download small, load only what a page needs (`loadWebFonts([ ...TEXT_FONTS, ...MATH_BASE_FONTS ])` from `@gum-jsx/core/fonts` and `@gum-jsx/math`) and call it again with more names later; loading is memoized per family. `installFontFaces()` on its own registers whatever core has already loaded — call it after `mathToSvgAsync`, which fetches faces on demand.
+To keep the initial download small, load only what a page needs (`loadWebFonts([ ...TEXT_FONTS, ...MATH_BASE_FONTS ])` from `@gum-jsx/core` and `@gum-jsx/math`) and call it again with more names later; loading is memoized per file. `installFontFaces()` on its own registers whatever is already loaded — call it after `mathToSvgAsync`, which fetches faces on demand. Every function here takes an `Env` as its last argument to work against one other than the default (`loadWebFonts(names, env)`); an `Svg` element passed to `embedFonts`/`rasterizeSvg` uses its own.
 
 ### Exporting
 

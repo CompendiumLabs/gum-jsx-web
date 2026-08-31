@@ -4,11 +4,9 @@
 
 import { strict as assert } from 'node:assert'
 
-import { sans } from '@gum-jsx/core'
-import { loadFonts, TEXT_FONTS } from '@gum-jsx/core/fonts'
+import { gum, sans, TEXT_FONTS } from '@gum-jsx/core'
 import { evaluateGum } from '@gum-jsx/core/eval'
-import '@gum-jsx/math'
-import { MATH_BASE_FONTS } from '@gum-jsx/math'
+import { math, MATH_BASE_FONTS } from '@gum-jsx/math'
 
 import { loadedFaces, installFontFaces, fontCss, embedFonts, toBase64, fromBase64, dataUrlToBlob, blobToDataUrl } from '../src/index'
 
@@ -17,15 +15,16 @@ function test(name: string, fn: () => void | Promise<void>): Promise<void> {
     return Promise.resolve().then(fn).then(() => { console.log(`ok — ${name}`); passed++ })
 }
 
-await loadFonts([ ...TEXT_FONTS, ...MATH_BASE_FONTS, 'KaTeX_Math-BoldItalic' ])
+gum.use(math)
+await gum.loadFonts([ ...TEXT_FONTS, ...MATH_BASE_FONTS, 'KaTeX_Math-BoldItalic' ])
 
 await test('loadedFaces: one css face per file, weights from the registry', () => {
     const faces = loadedFaces()
     const plex = faces.filter(f => f.family == sans)
     assert.deepEqual(plex.map(f => f.weight).sort(), [ 300, 400, 700 ])
     // a registry name that is its own family (the Math-Italic file is what the
-    // svg calls KaTeX_Math) is upright at 400; one mapped through FONT_FACES
-    // carries its family, weight and style
+    // svg calls KaTeX_Math) is upright at 400; one mapped through the plugin's
+    // faces carries its family, weight and style
     const math = faces.find(f => f.key == 'KaTeX_Math')
     assert.deepEqual(math && [ math.family, math.weight, math.style ], [ 'KaTeX_Math', 400, 'normal' ])
     const boldItalic = faces.find(f => f.key == 'KaTeX_Math-BoldItalic')

@@ -4,9 +4,11 @@
 // opened as a file on its own cannot reach the page's fonts, so for its text to
 // render in the faces gum measured with, the font data has to travel inside
 // the SVG as data-url @font-face rules in its <style>. The rules are built
-// from the loaded registry (FONT_DATA) and cached per face.
+// from the loaded registry of an Env (an element's own, or the default) and
+// cached per face.
 
 import type { Svg } from '@gum-jsx/core'
+import type { Env } from '@gum-jsx/core/env'
 import { loadedFaces, type LoadedFace } from './fonts'
 
 function toBase64(data: ArrayBuffer): string {
@@ -35,15 +37,16 @@ function fontFaceRule({ key, family, weight, style, data }: LoadedFace): string 
 // the @font-face rules for the loaded faces (default: everything loaded); a
 // full set is a few hundred kB, so pass the families the SVG actually uses
 // where that is known
-function fontCss(names?: string[]): string {
-    return loadedFaces(names).map(fontFaceRule).join('\n')
+function fontCss(names?: string[], env?: Env): string {
+    return loadedFaces(names, env).map(fontFaceRule).join('\n')
 }
 
-// a copy of the element (or markup) whose <style> carries the font rules
+// a copy of the element (or markup) whose <style> carries the font rules; an
+// element's faces come from its own Env, markup's from `env` (default: the default Env)
 function embedFonts(svg: Svg, names?: string[]): Svg
-function embedFonts(svg: string, names?: string[]): string
-function embedFonts(svg: Svg | string, names?: string[]): Svg | string {
-    const css = fontCss(names)
+function embedFonts(svg: string, names?: string[], env?: Env): string
+function embedFonts(svg: Svg | string, names?: string[], env?: Env): Svg | string {
+    const css = fontCss(names, typeof svg == 'string' ? env : svg.env)
     if (typeof svg == 'string') {
         return svg.replace(/<svg\b[^>]*>/, tag => `${tag}\n<style>\n${css}\n</style>`)
     } else {

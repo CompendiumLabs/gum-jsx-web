@@ -6,6 +6,7 @@
 // the markup first (see embed.ts) unless the caller opts out.
 
 import type { Svg } from '@gum-jsx/core'
+import type { Env } from '@gum-jsx/core/env'
 import type { Size } from '@gum-jsx/core/lib/types'
 import { fitSize } from '@gum-jsx/core/eval'
 import { embedFonts } from './embed'
@@ -15,6 +16,7 @@ interface RasterizeArgs {
     background?: string        // fill behind the drawing (default: transparent)
     fonts?: boolean | string[] // embed the loaded fonts (default), a list of families, or false
     dpr?: number               // device pixels per css pixel (default: 1)
+    env?: Env                  // whose fonts markup names (default: the default Env; an element uses its own)
 }
 
 interface RasterizeResult {
@@ -50,11 +52,11 @@ function canvasToBlob(canvas: HTMLCanvasElement, type: string = 'image/png'): Pr
     })
 }
 
-async function drawSvgCanvas(svg: Svg | string, { size, background, fonts = true, dpr = 1 }: RasterizeArgs = {}): Promise<RasterizeResult> {
+async function drawSvgCanvas(svg: Svg | string, { size, background, fonts = true, dpr = 1, env }: RasterizeArgs = {}): Promise<RasterizeResult> {
     // markup with the fonts inside it
     const names = Array.isArray(fonts) ? fonts : undefined
     const text = typeof svg == 'string'
-        ? (fonts ? embedFonts(svg, names) : svg)
+        ? (fonts ? embedFonts(svg, names, env) : svg)
         : (fonts ? embedFonts(svg, names) : svg).svg()
 
     // load it as an image
