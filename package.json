@@ -14,19 +14,37 @@
     "access": "public"
   },
   "files": [
-    "src"
+    "src",
+    "types"
   ],
   "exports": {
-    ".": "./src/index.ts",
-    "./fonts": "./src/fonts.ts",
-    "./embed": "./src/embed.ts",
-    "./raster": "./src/raster.ts",
-    "./files": "./src/files.ts",
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./src/index.ts"
+    },
+    "./fonts": {
+      "types": "./types/fonts.d.ts",
+      "import": "./src/fonts.ts"
+    },
+    "./embed": {
+      "types": "./types/embed.d.ts",
+      "import": "./src/embed.ts"
+    },
+    "./raster": {
+      "types": "./types/raster.d.ts",
+      "import": "./src/raster.ts"
+    },
+    "./files": {
+      "types": "./types/files.d.ts",
+      "import": "./src/files.ts"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
     "test": "bun ./scripts/test.ts",
-    "typecheck": "bun tsc --noEmit"
+    "typecheck": "bun tsc --noEmit",
+    "types": "rm -rf types && bun tsc -p tsconfig.types.json",
+    "prepublishOnly": "bun run types"
   },
   "peerDependencies": {
     "@gum-jsx/core": "^1.8.0"
