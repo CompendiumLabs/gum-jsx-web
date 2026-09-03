@@ -3,7 +3,7 @@
 The browser runtime for gum.jsx, the counterpart of `@gum-jsx/node`: font installation via
 the `FontFace` API, font embedding into SVG, canvas rasterization, and download/blob helpers.
 A pure, framework-free library — React pieces belong in `@gum-jsx/react`. Core is a peer
-dependency (`^1.8.0`, versioned in lockstep): everything here reads an `Env`'s font registry
+dependency (`^1.9.0`, versioned in lockstep): everything here reads an `Env`'s font registry
 (`env.fonts`: `names`, `has`, `face`, `data`, `load`; `resolveEnv` from `@gum-jsx/core/env` gives
 the default Env when none is passed), so faces a plugin registers (the KaTeX ones from
 `@gum-jsx/math`) are covered without depending on the plugin. Math is only a `devDependency`, for
