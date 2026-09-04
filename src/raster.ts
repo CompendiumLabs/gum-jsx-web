@@ -52,6 +52,16 @@ function canvasToBlob(canvas: HTMLCanvasElement, type: string = 'image/png'): Pr
     })
 }
 
+// the size an svg renders at: its declared width and height when it has them (a
+// zoomed crop declares the magnified region's dims while keeping the layout size
+// it was built at), else the element's own size, else the loaded image's
+function ownSize(svg: Svg | string, img: HTMLImageElement): Size {
+    if (typeof svg == 'string') return [ img.width, img.height ]
+    const { width, height } = svg.attr
+    if (typeof width == 'number' && typeof height == 'number') return [ width, height ]
+    return svg.size
+}
+
 async function drawSvgCanvas(svg: Svg | string, { size, background, fonts = true, dpr = 1, env }: RasterizeArgs = {}): Promise<RasterizeResult> {
     // markup with the fonts inside it
     const names = Array.isArray(fonts) ? fonts : undefined
@@ -68,8 +78,8 @@ async function drawSvgCanvas(svg: Svg | string, { size, background, fonts = true
         URL.revokeObjectURL(url)
     }
 
-    // the output size: the element's own size where we have it, else the image's
-    const own: Size = typeof svg == 'string' ? [ img.width, img.height ] : svg.size
+    // the output size
+    const own = ownSize(svg, img)
     const out = fitSize(own, size)
     const [ width, height ] = out
 
